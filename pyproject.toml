@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pythonproject"
+name = "myTimeOffRequest"
 version = "0.1.0"
 description = ""
 authors = ["SleepyLink1 <88170820+SleepyLink1@users.noreply.github.com>"]
