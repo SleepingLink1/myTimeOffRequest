@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class TimeOffRequest(models.Model):
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
     start_date = models.DateField()
@@ -7,7 +8,7 @@ class TimeOffRequest(models.Model):
     reason = models.TextField()
 
     def __str__(self):
-        return f"{self.employeeID} - {self.start_date} to {self.end_date}"
+        return f"{self.employee} - {self.start_date} to {self.end_date}"
 
     class Employee(models.Model):
         employeeID = models.CharField(max_length=200, unique=True)
