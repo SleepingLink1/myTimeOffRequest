@@ -22,9 +22,13 @@ class LoginView(View):
         else:
             # Return an 'invalid login' error message.
             return HttpResponse('Invalid username or password.')
+
+
 class TimeOffRequestView(View):
     def get(self, request):
         return render(request, 'time_off_request.html')
+
+
 @login_required
 def modify_time_off_request(request, request_id):
     time_off_request = TimeOffRequest.objects.get(id=request_id)
