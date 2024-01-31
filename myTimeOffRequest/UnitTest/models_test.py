@@ -1,7 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, timedelta
 from myTimeOffRequest.myTimeOffRequest.models import Employee, TimeOffRequest
+
 
 class TimeOffRequestModelTest(TestCase):
     def setUp(self):
@@ -19,3 +20,27 @@ class TimeOffRequestModelTest(TestCase):
     def test_time_off_request_str(self):
         expected_object_name = f'{self.time_off_request.start_date} - {self.time_off_request.end_date}'
         self.assertEqual(str(self.time_off_request), expected_object_name)
+
+    def test_validate_request(self):
+        self.assertTrue(self.time_off_request.validate_request())
+
+        self.time_off_request.end_date = self.time_off_request.start_date - timedelta(days=1)
+        self.time_off_request.save()
+
+        # Now validate_request() should return False
+        self.assertFalse(self.time_off_request.validate_request())
+
+
+class EmployeeModelTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.employee = Employee.objects.create(user=self.user)
+
+    def test_total_time_off(self):
+        TimeOffRequest.objects.create(start_date=datetime.now(), end_date=datetime.now() + timedelta(days=1),
+                                      employee_id=self.user)
+        TimeOffRequest.objects.create(start_date=datetime.now(), end_date=datetime.now() + timedelta(days=2),
+                                      employee_id=self.user)
+
+        # Now the total time off should be 3 days
+        self.assertEqual(self.employee.total_time_off(), 3)
