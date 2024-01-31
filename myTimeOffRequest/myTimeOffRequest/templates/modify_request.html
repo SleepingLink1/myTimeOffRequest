@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modify Request</title>
+</head>
+<body>
+    <h1>Modify Request</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="start_date">Start Date:</label><br>
+        <input type="date" id="start_date" name="start_date" value="{{ request.start_date|date:'Y-m-d' }}"><br>
+        <label for="end_date">End Date:</label><br>
+        <input type="date" id="end_date" name="end_date" value="{{ request.end_date|date:'Y-m-d' }}"><br>
+        <label for="reason">Reason:</label><br>
+        <input type="text" id="reason" name="reason" value="{{ request.reason }}"><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

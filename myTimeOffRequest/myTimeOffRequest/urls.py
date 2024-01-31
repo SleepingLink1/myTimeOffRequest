@@ -14,17 +14,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from django.urls import path, include, reverse_lazy
-from .views import  EmployeeRegistrationView, LoginView, HomeView, TimeOffRequest, ModifyTimeOffRequest
+from django.urls import path
+from .views import base_redirect, EmployeeRegistrationView, UserTimeOffRequestsView, HomeView, TimeOffRequest, ModifyTimeOffRequest
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', base_redirect, name='base_redirect'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('login/', auth_views.LogoutView.as_view(), name='logout'),
-    path('register/', EmployeeRegistrationView.as_view(), name='register'),
-    path('home/', HomeView.as_view(), name='home'),
-    path('submit_new_request/', TimeOffRequest.as_view(), name='submit_new_request'),
-    path('modify_request/<int:request_id>/', ModifyTimeOffRequest.as_view(), name='modify_request'),
-    path('time_off_requsts/', TimeOffRequest.as_view(), name='time_off_requests'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('register/', EmployeeRegistrationView.as_view(), name='signup'),
+    path('home', HomeView, name='home'),
+    path('submit_new_request/', TimeOffRequest, name='submit_new_request'),
+    path('modify_request/', ModifyTimeOffRequest, name='modify_request'),
+    path('time_off_requsts/<int:request_id>/', UserTimeOffRequestsView, name='time_off_requests'),
+    path('delete_request/<int:request_id>/', UserTimeOffRequestsView, name='delete_request'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

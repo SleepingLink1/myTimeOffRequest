@@ -16,6 +16,9 @@ class TimeOffRequest(models.Model):
 class Employee(User):
     employee_id = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 
     def days_off_this_year(self):

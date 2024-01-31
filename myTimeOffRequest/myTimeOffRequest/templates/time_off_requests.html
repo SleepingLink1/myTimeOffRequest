@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +27,7 @@
             <td>{{ request.end_date }}</td>
             <td>
                 {% if request.employee_id == user.username %}
-                <a href="{% url 'edit_request' request.id %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'modify_request' request.id %}" class="btn btn-primary">Edit</a>
                 <a href="{% url 'delete_request' request.id %}" class="btn btn-danger">Delete</a>
                 {% endif %}
             </td>
