@@ -9,17 +9,7 @@ from django.views import View
 
 
 
-def post(self, request):
-    first_name = request.POST['first_name']
-    last_name = request.POST['last_name']
-    employee_id = request.POST['employee_id']
-    password = request.POST['password']
-    if Employee.objects.filter(first_name=first_name, last_name=last_name).exists():
-        return HttpResponse('A user with this first and last name already exists.')
-    else:
-        user = Employee.objects.create_user(username=employee_id, password=password, first_name=first_name, last_name=last_name)
-        login(request, user)
-        return render(request, 'home.html')
+
 class login_view(View):
     def get(self, request):
         # Render the login form
@@ -37,16 +27,6 @@ class login_view(View):
             # Return an 'invalid login' error message.
             return HttpResponse('Invalid username or password.')
 
-@login_required
-def post(self, request):
-    employee_id = request.POST['employee_id']
-    password = request.POST['password']
-    user = authenticate(request, username=employee_id, password=password)
-    if user is not None:
-        login(request, user)
-        return render(request, 'home.html')
-    else:
-        return HttpResponse('Invalid employee ID or password.')
 
 @login_required
 class home_view(View):
