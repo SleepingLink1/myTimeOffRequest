@@ -2,9 +2,9 @@ from datetime import date
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseForbidden, HttpResponse
+from django.http import HttpResponse
 from .models import TimeOffRequest, Employee
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 
 
@@ -18,7 +18,7 @@ class EmployeeRegistrationView(View):
         employee_id = request.POST['employee_id']
         password = request.POST['password']
         if Employee.objects.filter(first_name=first_name, last_name=last_name).exists():
-            return HttpResponse('A user with this first and last name already exists.')
+            return render(request, 'signup.html', {'error':'A user with this first and last name already exists.'})
         else:
             user = Employee.objects.create_user(username=employee_id, password=password, first_name=first_name,
                                                 last_name=last_name)
@@ -37,7 +37,8 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            # Redirect to a success page.
+            request.session['user_id'] = user.id
+            # Redirect to home page.
             return render(request, 'home.html')
         else:
             # Return an 'invalid login' error message.
@@ -47,10 +48,9 @@ class LoginView(View):
 @login_required
 class HomeView(View):
     def get(self, request):
+        if 'user_id' not in request.session:  # Check if user ID exists in session
+            return redirect('login')
         return render(request, 'home.html')
-
-    def post(self, request, message=None):
-        return render(request, 'home.html', {message})
 
 
 @login_required
