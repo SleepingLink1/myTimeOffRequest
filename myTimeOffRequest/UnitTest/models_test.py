@@ -29,3 +29,18 @@ class TimeOffRequestModelTest(TestCase):
 
         # Now validate_request() should return False
         self.assertFalse(self.time_off_request.validate_request())
+
+
+class EmployeeModelTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.employee = Employee.objects.create(user=self.user)
+
+    def test_total_time_off(self):
+        TimeOffRequest.objects.create(start_date=datetime.now(), end_date=datetime.now() + timedelta(days=1),
+                                      employee_id=self.user)
+        TimeOffRequest.objects.create(start_date=datetime.now(), end_date=datetime.now() + timedelta(days=2),
+                                      employee_id=self.user)
+
+        # Now the total time off should be 3 days
+        self.assertEqual(self.employee.total_time_off(), 3)
