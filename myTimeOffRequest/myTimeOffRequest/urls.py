@@ -15,12 +15,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from .views import login_view, logout_view, signup_view, home_view, modify_time_off_request, delete_time_off_request, create_time_off_request
-
+from django.contrib.auth import views as auth_views
+from django.urls import path, include, reverse_lazy
+from .views import  EmployeeRegistrationView, LoginView, HomeView, TimeOffRequest, ModifyTimeOffRequest
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', login_view.as_view(), name='login'),
-    path('login/', logout_view.as_view(), name='logout'),
-
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('login/', auth_views.LogoutView.as_view(), name='logout'),
+    path('register/', EmployeeRegistrationView.as_view(), name='register'),
+    path('home/', HomeView.as_view(), name='home'),
+    path('submit_new_request/', TimeOffRequest.as_view(), name='submit_new_request'),
+    path('modify_request/<int:request_id>/', ModifyTimeOffRequest.as_view(), name='modify_request'),
+    path('time_off_requsts/', TimeOffRequest.as_view(), name='time_off_requests'),
 ]
