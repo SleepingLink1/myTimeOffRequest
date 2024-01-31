@@ -3,7 +3,7 @@ name: Python tests
 on: [ push ]
 
 env:
-  PYTHON_VERSION: "3.11"
+  PYTHON_VERSION: "3.11.3"
   DJANGO_VERSION: "3.2.5"
   POETRY_VERSION: "1.7.1"
 
